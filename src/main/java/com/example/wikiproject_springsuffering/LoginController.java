@@ -5,11 +5,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class HelloController {
+public class LoginController {
 
-    @GetMapping("/index")
+    @GetMapping("/login")
     public String hello(Model model) {
     model.addAttribute("helloMsg", "ARMOK'S WORST WIKI HOMEPAGE");
-    return "index"; // resolves to hello.html in templates/
+    return "login"; // resolves to hello.html in templates/
     }
 }
