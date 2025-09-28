@@ -1,4 +1,4 @@
-package com.example.wikiproject_springsuffering;
+package com.wikiproject_springsuffering;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
