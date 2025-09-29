@@ -2,13 +2,18 @@
 <head>
     <meta charset="UTF-8">
     <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/userportal.css}">
+    <style>body{background-color: #ffaaff;}</style>
 </head>
 <body>
-    <h1>Register</h1>
-    <form th:action="@{/register}"th:object="${customer}"method="post">
-        <p><label>Name:<input th:field="*{username}"/></label></p>
-        <p><label>Password:<input th:field="*{password}" type="password"/></label></p>
-        <button type="submit">Submit</button>
+    <h1>ARMOK'S WORST REGISTRATION PORTAL</h1>
+    <div th:if="${resultMessage}" th:text="${resultMessage}" class="resultCSS"></div>
+    
+    <form th:action="@{/register}" th:object="${adminForm}" method="post">
+           <p><label>Name:<input th:field="*{username}" required/></label></p>
+        <p><label>Password:<input th:field="*{password}" type="password"required /></label></p>
+        <button type="submit">Register</button>
     </form>
+    <p><a href="login">Or did you want to log in?</a></p>
 </body>
 </html>

@@ -1,13 +1,19 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Hello Thymeleaf</title>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/userportal.css}">
+    <style>body{background-color: #aaffff;}</style>
 </head>
 <body>
-<h1 th:text="'LOGIN PAGE OF ' + ${ helloMsg} + '!'">Hello, World!</h1>
-<p>Made with SPRINGBOOT ft. THYMELEAF</p>
-<p><a href = "login.html"></p>
+    <h1>ARMOK'S WORST LOGIN PORTAL</h1>
+    <div th:if="${resultMessage}" th:text="${resultMessage}" class="resultCSS"></div>
 
+    <form th:action="@{/login}" th:object="${adminForm}" method="post">
+        <p><label>Name:<input th:field="*{username}"required /></label></p>
+        <p><label>Password:<input th:field="*{password}" type="password" required/></label></p>
+        <button type="submit">Login</button>
+    </form>
+    <p><a href="register">Or did you want to register?</a></p>
 </body>
 </html>

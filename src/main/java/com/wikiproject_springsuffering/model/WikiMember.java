@@ -1,8 +1,7 @@
 package com.wikiproject_springsuffering.model;
 import jakarta.persistence.*;
-@Entity
-@Table(name = "admin_login")
-public class Customer {
+@MappedSuperclass
+public abstract class WikiMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -10,9 +9,7 @@ public class Customer {
     @Column(nullable = false, unique = true)
     private String username;
 
-    // Absolutely TERRIBLE landmine behavior: Necessary for preventing
-    // password from unintentionally creating a new column
-    @Transient 
+    @Transient
     private String password;
 
     @Column(nullable = false)
