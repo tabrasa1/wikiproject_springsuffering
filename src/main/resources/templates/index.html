@@ -3,11 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <title>Hello Thymeleaf</title>
+
+<style>
+/* we're never going to use this layout anywhere else anyway */
+@keyframes scalePulse {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.goofy-anim {
+    display: inline-block;
+    animation: scalePulse 1s ease-in-out infinite;
+}
+
+
+body {
+    /* This decision may look unhinged but it's been confirmed
+    to be one of the most accessibility-friendly fonts for
+    the reading impaired that's ubiquitous in system availability*/
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    color: #000022;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* full viewport height */
+    margin: 0;
+    flex-direction: column;
+}
+</style>
 </head>
-<body>
-<h1 th:text="'Greetings! This is ' + ${ helloMsg} + '!'">Hello, World!</h1>
+<body th:style="'background-color:' + ${randomColor}">
+<h1 th:text="'Greetings! This is ' + ${ helloMsg} + '!'" class="goofy-anim">Hello, World!</h1>
 <p>Made with SPRINGBOOT ft. THYMELEAF</p>
-<p><a href = "register">Let's log in! </a></p>
+<p><a href = "login">Let's log in! </a></p>
 
 </body>
 </html>

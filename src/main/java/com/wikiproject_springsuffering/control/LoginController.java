@@ -25,19 +25,28 @@ public class LoginController {
     
     @PostMapping("/login")
     public String submitForm(Admin adminForm, Model model) {
-        if (adminForm.getUsername() == null || adminForm.getUsername().trim().isEmpty() ||
-        adminForm.getPassword() == null || adminForm.getPassword().trim().isEmpty()) {
-        model.addAttribute("resultMessage", "Blank forms should not be possible!");
+        if (adminForm.getUsername() == null
+        || adminForm.getUsername().trim().isEmpty()
+        || adminForm.getPassword() == null
+        || adminForm.getPassword().trim().isEmpty()) {
+        model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
         }
-        else if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()) {
-            model.addAttribute("resultMessage", "Username confirmed!");
+        else {
+            //Get hashes ready
+            String DBHash = adminRepoConn.findPasswordHashByUsername(adminForm.getUsername());
+            String submitHash = String.valueOf(adminForm.getPassword().hashCode());
 
-            //todo: die a hero
+            //Test username and password hashes
+            if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()
+            && (submitHash.equals(DBHash))) {
+                model.addAttribute("resultMessage", "Login successful!");
+            }
+            else {
+                model.addAttribute("resultMessage", "No credential match!");
+            }
         }
-        else{
-            model.addAttribute("resultMessage", "No match!");
-        }
-        model.addAttribute("adminForm", new Admin()); // Reset the form
+        //Reset the form or else it bricks
+        model.addAttribute("adminForm", new Admin());
         return "login";
    }
 }

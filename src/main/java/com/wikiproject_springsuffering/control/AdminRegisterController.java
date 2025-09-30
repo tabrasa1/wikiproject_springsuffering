@@ -24,18 +24,22 @@ public class AdminRegisterController {
     
     @PostMapping("/register")
     public String submitForm(Admin adminForm, Model model) {
-        if (adminForm.getUsername() == null || adminForm.getUsername().trim().isEmpty() ||
-        adminForm.getPassword() == null || adminForm.getPassword().trim().isEmpty()) {
-        model.addAttribute("resultMessage", "Blank forms should not be possible!");
+        if (adminForm.getUsername() == null
+        || adminForm.getUsername().trim().isEmpty()
+        || adminForm.getPassword() == null
+        || adminForm.getPassword().trim().isEmpty()) {
+        model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
         }
         else if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()) {
             model.addAttribute("resultMessage", "Username is already taken!");
         } else {
             adminForm.setPassword_hash(String.valueOf(adminForm.getPassword().hashCode()));
-            //adminRepoConn.save(adminForm);
-            model.addAttribute("resultMessage", "User registered!" + adminForm.getUsername());
+            //adminRepoConn.save(adminForm); Disabled for testing purposes
+            model.addAttribute("resultMessage", "User "+adminForm.getUsername()+" registered!");
         }
-        model.addAttribute("adminForm", new Admin()); // Reset the form
+        
+        //Reset the form or else it bricks
+        model.addAttribute("adminForm", new Admin());
         return "register";
     }
 }

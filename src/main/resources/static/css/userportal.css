@@ -1,13 +1,15 @@
 body {
+    /* This decision may look unhinged but it's been confirmed
+    to be one of the most accessibility-friendly fonts for
+    the reading impaired that's ubiquitous in system availability*/
     font-family: "Comic Sans MS", cursive, sans-serif;
-    background-color: #f4f4f4;
     padding: 40px;
-    color: #333;
+    color: #000022;
     text-align: center;
 }
 
 h1 {
-    color: #444;
+    color: #000022;
 }
 
 .resultCSS{
