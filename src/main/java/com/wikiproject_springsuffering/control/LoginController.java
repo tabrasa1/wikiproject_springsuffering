@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.mindrot.jbcrypt.BCrypt;
 
 
 @Controller
@@ -30,20 +31,19 @@ public class LoginController {
         || adminForm.getPassword() == null
         || adminForm.getPassword().trim().isEmpty()) {
         model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
+        return "login"; //Redundant, but avoids nested else statement
+        }
+        //Get hashes ready
+        String DBHash = adminRepoConn.findPasswordHashByUsername(adminForm.getUsername());
+        Boolean submitHash = BCrypt.checkpw(adminForm.getPassword(), DBHash);
+
+        //Test username and password hashes
+        if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()
+        && (submitHash==true) ){
+            model.addAttribute("resultMessage", "Login successful!");
         }
         else {
-            //Get hashes ready
-            String DBHash = adminRepoConn.findPasswordHashByUsername(adminForm.getUsername());
-            String submitHash = String.valueOf(adminForm.getPassword().hashCode());
-
-            //Test username and password hashes
-            if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()
-            && (submitHash.equals(DBHash))) {
-                model.addAttribute("resultMessage", "Login successful!");
-            }
-            else {
-                model.addAttribute("resultMessage", "No credential match!");
-            }
+            model.addAttribute("resultMessage", "No credential match!");
         }
         //Reset the form or else it bricks
         model.addAttribute("adminForm", new Admin());

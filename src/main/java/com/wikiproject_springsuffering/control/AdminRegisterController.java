@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Controller
 //Establish the AdminRepository class for use, establish binding
@@ -15,7 +16,7 @@ public class AdminRegisterController {
         this.adminRepoConn = adminRepoAccess;
     }
 
-    //Establish a form with Admin model for data
+    //Establish a form with the Admin model for data
     @GetMapping("/register")
     public String showForm(Model model) {
         model.addAttribute("adminForm", new Admin());
@@ -33,8 +34,8 @@ public class AdminRegisterController {
         else if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()) {
             model.addAttribute("resultMessage", "Username is already taken!");
         } else {
-            adminForm.setPassword_hash(String.valueOf(adminForm.getPassword().hashCode()));
-            //adminRepoConn.save(adminForm); Disabled for testing purposes
+            adminForm.setPassword_hash(BCrypt.hashpw(adminForm.getPassword(), BCrypt.gensalt()));
+            adminRepoConn.save(adminForm);
             model.addAttribute("resultMessage", "User "+adminForm.getUsername()+" registered!");
         }
         
