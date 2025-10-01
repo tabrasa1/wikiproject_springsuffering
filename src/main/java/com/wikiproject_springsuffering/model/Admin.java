@@ -11,14 +11,14 @@ public class Admin {
     private String username;
 
     // Absolutely TERRIBLE landmine behavior: Necessary for preventing
-    // password from unintentionally creating a new column
+    // plaintext password from unintentionally creating a new column
     @Transient 
     private String password;
 
     @Column(nullable = false)
     private String password_hash;
 
-    // Getters/setters
+    // Getters & setters
     public Long getId() {return id;}
     public void setId(Long id) {this.id = id;}
 

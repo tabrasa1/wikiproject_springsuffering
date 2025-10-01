@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface AdminRepository extends JpaRepository<Admin, Long> {
-    //Registration username duplication query
+    //Username existence verification
     Optional<Admin> findByUsername(String username);
 
     //Login verification query
