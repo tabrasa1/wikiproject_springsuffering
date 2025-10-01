@@ -7,7 +7,7 @@ import java.util.Random; //patently frivulous
 
 @Controller
 public class HelloController {
-    @GetMapping("/")
+    @GetMapping("/") //runs this controller when this address is called
     //Helloworld replacer
     public String hello(Model model) {
     model.addAttribute("helloMsg", "ARMOK'S WORST WIKI HOMEPAGE");
