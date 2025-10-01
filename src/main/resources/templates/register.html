@@ -10,8 +10,8 @@
     <div th:if="${resultMessage}" th:text="${resultMessage}" class="resultCSS"></div>
     
     <form th:action="@{/register}" th:object="${adminForm}" method="post">
-            <p><label>Name:<input th:field="*{username}" required/></label></p>
-            <p><label>Password:<input th:field="*{password}" type="password"required /></label></p>
+        <p><label>Name:<input th:field="*{username}" required/></label></p>
+        <p><label>Password:<input th:field="*{password}" type="password"required /></label></p>
         <button type="submit">Register</button>
     </form>
     <p><a href="login">Or did you want to log in?</a></p>
