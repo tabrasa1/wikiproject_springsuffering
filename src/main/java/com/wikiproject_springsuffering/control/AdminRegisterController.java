@@ -25,14 +25,21 @@ public class AdminRegisterController {
     
     @PostMapping("/register")
     public String submitForm(Admin adminForm, Model model) {
+        //Blank field check
         if (adminForm.getUsername() == null
         || adminForm.getUsername().trim().isEmpty()
         || adminForm.getPassword() == null
         || adminForm.getPassword().trim().isEmpty()) {
         model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
         }
+        //Alphanumeric check
+        else if (adminForm.getUsername().matches("^[a-zA-Z0-9]+$") == false){
+            model.addAttribute("resultMessage", "Username must be alphanumeric!");
+        }
+        //Duplicate username check
         else if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()) {
             model.addAttribute("resultMessage", "Username is already taken!");
+        //Registration pass
         } else {
             adminForm.setPassword_hash(BCrypt.hashpw(adminForm.getPassword(), BCrypt.gensalt()));
             adminRepoConn.save(adminForm);

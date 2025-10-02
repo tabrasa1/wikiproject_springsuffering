@@ -27,25 +27,27 @@ public class LoginController {
     @PostMapping("/login")
     public String submitForm(Admin adminForm, Model model) {
         if (adminForm.getUsername() == null
-        || adminForm.getUsername().trim().isEmpty()
-        || adminForm.getPassword() == null
-        || adminForm.getPassword().trim().isEmpty()) {
-        model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
-        return "login"; //Redundant, but avoids nested else statement
+                || adminForm.getUsername().trim().isEmpty()
+                || adminForm.getPassword() == null
+                || adminForm.getPassword().trim().isEmpty()) {
+            model.addAttribute("resultMessage", "Blank form submissions should not be possible!");
+            model.addAttribute("adminForm", new Admin());
+            return "login"; //Prevent if statement nesting
         }
+
         //Get hashes ready
         String DBHash = adminRepoConn.findPasswordHashByUsername(adminForm.getUsername());
-        Boolean submitHash = BCrypt.checkpw(adminForm.getPassword(), DBHash);
-
-        //Test username and password hashes
-        if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent()
-        && (submitHash==true) ){
+        boolean submitHash = false;
+        if (DBHash != null) {
+            submitHash = BCrypt.checkpw(adminForm.getPassword(), DBHash);
+        }
+        //Evaluate hashes
+        if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent() && submitHash) {
             model.addAttribute("resultMessage", "Login successful!");
         }
         else {
             model.addAttribute("resultMessage", "No credential match!");
         }
-        //Reset the form or else it bricks
         model.addAttribute("adminForm", new Admin());
         return "login";
    }
