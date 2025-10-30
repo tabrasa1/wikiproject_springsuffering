@@ -11,5 +11,14 @@
         <li><a th:href="@{categories}">Browse Categories</a></li>
         <li><a th:href="@{articles/new}">Create New Article</a></li>
     </ul>
+
+    <h2>Recent Articles</h2>
+    <ul>
+        <li th:each="article : ${recentArticles}">
+            <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
+            <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
+        </li>
+    </ul>
+
 </body>
 </html>

@@ -7,16 +7,33 @@
 </head>
 
 <body>
-    <h1 th:text="${article.title}">Article Title</h1>
-    <!-- NOT POSSIBLE WITHOUT SESSIONS <p><strong>Author:</strong> <span>Author Name</span></p> -->
-    <p><strong>Created:</strong> <span th:text="${article.dateCreate}">Date</span></p>
-    <hr>
-    <div th:utext="${article.contents}">
-        <!-- Article content goes here -->
+    <div th:if="${article != null}">
+        <h1 th:text="${article.title}">Article Title</h1>
+
+        <hr>
+
+        <div><strong>Created:</strong> <span th:text="${article.dateCreate}">Date</span></div>
+        <div><strong>Last Edited:</strong> <span th:text="${article.dateEdit}">dateEdit</span></div>
+        <div><strong>Tags:</strong> <span th:each="tag : ${article.tags}" th:text="${tag?.name}" style="margin-right:8px;">Tag</span></div>
+        <div><strong>Category:</strong> <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span></div>
+
+        <div th:utext="${article.contents}">Contents</div>
     </div>
 
+    <!--Invalid ID handling-->
+    <div th:if="${article == null}">
+        <h1>404, man!</h1>
+        No article was found with that ID.. Wanna make one?
+    </div>
     <br>
     <a href="/wiki/">Back to Articles</a>
+
+            </li>
+        </ul>
+        
+    </div>
 </body>
+
+
 
 </html>

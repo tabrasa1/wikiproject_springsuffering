@@ -14,10 +14,17 @@ import com.wikiproject_springsuffering.model.WikiCategory;
 //No special operations needed, Thymeleaf will handle it
 public interface WarticleRepository extends JpaRepository<Warticle, Integer> {
 
+    //Query to handle category filtering
     List<Warticle> findByCategory(WikiCategory category);
-    //List<Warticle> findByTags_Name(List<String> names);
+
+    //Query to handle tag search
     @Query("SELECT DISTINCT a FROM Warticle a JOIN a.tags t WHERE t.name IN :names")
     List<Warticle> findByTags_Name(@Param("names") List<String> names);
+
+    //Query to handle fetching of three most recent articles
+    //Seriously springboot syntax is cracked this looks like a method name and not like a bunch of chained query syntax
+    //and i would have never figured this out through manually seeking documentation
+    List<Warticle> findTop3ByOrderByDateCreateDesc();
 
 
 

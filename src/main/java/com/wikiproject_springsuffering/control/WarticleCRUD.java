@@ -29,8 +29,10 @@ public class WarticleCRUD {
 
     //It's just the mainpage dawg
     @GetMapping("/")
-    public String showMainWikiPage() {
-        return "wikicrud/wikimain"; // it's just mainpage man
+    public String showMainWikiPage(Model model) {
+        List<Warticle> recentArticles = warticleRepository.findTop3ByOrderByDateCreateDesc();
+        model.addAttribute("recentArticles", recentArticles);
+        return "wikicrud/wikimain";
     }
 
     // READ: Display all categories
@@ -55,7 +57,7 @@ public class WarticleCRUD {
     // READ: Display articles by searched tags
     @GetMapping("/articles/search")
     public String searchByTags(@RequestParam("tags") String tagInput, Model model) {
-        String[] tagNames = tagInput.split(",");
+        String[] tagNames = tagInput.split(","); //break it up between each comma
         List<Warticle> articles = warticleRepository.findByTags_Name(Arrays.stream(tagNames)
             .map(String::trim)
             .collect(Collectors.toList()));
@@ -64,6 +66,15 @@ public class WarticleCRUD {
         return "wikicrud/articles";
     }
 
+    //READ: Display articles by exact ID
+    @GetMapping("/articles/{id}")
+    public String articleByID(@PathVariable Integer id, Model model) {
+        Optional<Warticle> accessArticle = warticleRepository.findById(id);
+        Warticle articleFetch = accessArticle.orElse(null);
+        model.addAttribute("article", articleFetch);    
+
+    return "wikicrud/viewarticle.html";
+    }
     // READ: Display all articles
     @GetMapping("/articles")
     public String listArticles(Model model) {
