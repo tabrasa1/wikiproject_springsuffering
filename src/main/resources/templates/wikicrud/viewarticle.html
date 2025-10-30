@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Wiki Articles</title>
+    <meta charset="UTF-8">
+</head>
+
+<body>
+    <h1 th:text="${article.title}">Article Title</h1>
+    <!-- NOT POSSIBLE WITHOUT SESSIONS <p><strong>Author:</strong> <span>Author Name</span></p> -->
+    <p><strong>Created:</strong> <span th:text="${article.dateCreate}">Date</span></p>
+    <hr>
+    <div th:utext="${article.contents}">
+        <!-- Article content goes here -->
+    </div>
+
+    <br>
+    <a href="/wiki/">Back to Articles</a>
+</body>
+
+</html>
