@@ -1,16 +1,20 @@
 <!-- templates/fragments/navbar.html -->
 <div th:fragment="topnav">
     <nav style="background:#eee; padding:10px;">
-        <a th:href="@{/}" style="margin-right:15px;">Home</a>
-        <a th:href="@{/wiki/articles}" style="margin-right:15px;">Articles</a>
-        <a th:href="@{/wiki/categories}" style="margin-right:15px;">Categories</a>
-        <a th:href="@{/wiki/articles/new}" style="margin-right:15px;">New Article</a>
-        <a th:href="@{/login}" style="margin-right:15px;">Admin</a>
+        <div>ARMOK'S WORST NAVIGATION BAR</div>
+        <div>
+            <a th:href="@{/}" style="margin-right:15px;">Homepage</a>
+            <a th:href="@{/wiki/}" style="margin-right:15px;">Wiki Mainpage</a>
+            <a th:href="@{/wiki/articles}" style="margin-right:15px;">Articles</a>
+            <a th:href="@{/wiki/categories}" style="margin-right:15px;">Categories</a>
+            <a th:href="@{/wiki/articles/new}" style="margin-right:15px;">New Article</a>
+            <a th:href="@{/login}" style="margin-right:15px;">Admin</a>
 
-        <form th:action="@{/wiki/articles/search}" method="get" style="display:inline; margin-left:20px;">
-            <input type="text" name="tags" placeholder="Search by tags" />
-            <button type="submit">Search</button>
-        </form>
+            <form th:action="@{/wiki/articles/search}" method="get" style="display:inline; margin-left:20px;">
+                <input type="text" name="tags" placeholder="Search by tags" />
+                <button type="submit">Search</button>
+            </form>
+        </div>
 
     </nav>
     <hr>

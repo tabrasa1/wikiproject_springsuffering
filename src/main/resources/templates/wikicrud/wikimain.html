@@ -4,19 +4,15 @@
     <title>Wiki Main</title>
 </head>
 <body>
+    <div th:replace="fragments/navbar :: topnav"></div>
     <h1>Welcome to ARMOK'S WORST WIKI</h1>
-
-    <ul>
-        <li><a th:href="@{articles}">View All Articles</a></li>
-        <li><a th:href="@{categories}">Browse Categories</a></li>
-        <li><a th:href="@{articles/new}">Create New Article</a></li>
-    </ul>
 
     <h2>Recent Articles</h2>
     <ul>
         <li th:each="article : ${recentArticles}">
             <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
-            <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
+            <span th:text="'Created: ' + ${#dates.format(article.dateCreate, 'yyyy/MM/dd hh:mm')}
+             + ' & Updated:' + ${#dates.format(article.dateEdit, 'yyyy/MM/dd hh:mm')}"></span>
         </li>
     </ul>
 

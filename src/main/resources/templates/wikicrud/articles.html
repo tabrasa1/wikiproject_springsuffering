@@ -23,16 +23,8 @@
     <div th:if="${articles != null}">
         <ul>
             <li th:each="article : ${articles}">
-                <h2 th:text="${article.title}">Article Title</h2>
-                <p th:text="${article.contents}">Article Contents</p>
-                <p>
-                    Created: <span th:text="${article.dateCreate}">dateCreate</span><br>
-                    Last Edited: <span th:text="${article.dateEdit}">dateEdit</span><br>    
-                    Category: <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span><br>
-                    Tags: <span th:each="tag : ${article.tags}" th:text="${tag?.name}" style="margin-right:8px;">Tag</span>
-                </p>
-                TODO: CUD functionality
-                <!-- <a th:href="@{'/wiki/edit/' + ${articlea> stupid llm -->
+                <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
+                <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
             </li>
         </ul>
         

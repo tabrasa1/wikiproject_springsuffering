@@ -4,20 +4,35 @@
 <head>
     <title>Wiki Articles</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/viewarticle.css}">
 </head>
 
-<body>
+<body th:style="'background-color:' + ${randomColor}">
+
+    <div th:replace="fragments/navbar :: topnav"></div>
     <div th:if="${article != null}">
-        <h1 th:text="${article.title}">Article Title</h1>
+        <h1 class="articletitle" th:text="${article.title}">Article Title</h1>
 
         <hr>
 
-        <div><strong>Created:</strong> <span th:text="${article.dateCreate}">Date</span></div>
-        <div><strong>Last Edited:</strong> <span th:text="${article.dateEdit}">dateEdit</span></div>
-        <div><strong>Tags:</strong> <span th:each="tag : ${article.tags}" th:text="${tag?.name}" style="margin-right:8px;">Tag</span></div>
-        <div><strong>Category:</strong> <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span></div>
+        <div><strong>Created:</strong> <span class="articlemetadata" th:text="${article.dateCreate}">Date</span></div>
+        <div><strong>Last Edited:</strong> <span class="articlemetadata" th:text="${article.dateEdit}">dateEdit</span></div>
+        <div>
+            <strong>Tags:</strong>
+            <a th:each="tag : ${article.tags}"
+            th:href="@{'/wiki/articles/search?tags=' + ${tag.name}}"
+            th:text="${tag?.name}"
+            class="taglinks">Tag</a>
+        </div>
+        <div>
+            <strong>Category:</strong>
+            <a th:href="@{'/wiki/categories/' + ${article.category.id}}"
+            th:text="${article.category.name}"
+            class="taglinks">Category</a>
+        </div>
+        <hr>
 
-        <div th:utext="${article.contents}">Contents</div>
+        <div class="articlecontent" th:utext="${article.contents}">Contents</div>
     </div>
 
     <!--Invalid ID handling-->
@@ -26,7 +41,6 @@
         No article was found with that ID.. Wanna make one?
     </div>
     <br>
-    <a href="/wiki/">Back to Articles</a>
 
             </li>
         </ul>

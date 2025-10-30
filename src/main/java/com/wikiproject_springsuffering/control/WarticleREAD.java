@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @Controller
 @RequestMapping("/wiki")
-public class WarticleCRUD {
+public class WarticleREAD {
 
     @Autowired
     private WarticleRepository warticleRepository;
@@ -56,22 +56,23 @@ public class WarticleCRUD {
 
     // READ: Display articles by searched tags
     @GetMapping("/articles/search")
-    public String searchByTags(@RequestParam("tags") String tagInput, Model model) {
-        String[] tagNames = tagInput.split(","); //break it up between each comma
-        List<Warticle> articles = warticleRepository.findByTags_Name(Arrays.stream(tagNames)
+    public String searchByTags(@RequestParam("tags") String tagInput, Model model) { //acquire tags from get request
+        String[] tagNames = tagInput.split("[,\\s]+"); //parse between each space or comma
+        List<Warticle> articles = warticleRepository.findByTags_Name //invoke the query from repository
+        (Arrays.stream(tagNames) //clean tags and stuff em in a list
             .map(String::trim)
             .collect(Collectors.toList()));
-        model.addAttribute("articles", articles);
+        model.addAttribute("articles", articles); //values established for the viewer
         model.addAttribute("activeTags", tagInput);
         return "wikicrud/articles";
     }
 
     //READ: Display articles by exact ID
     @GetMapping("/articles/{id}")
-    public String articleByID(@PathVariable Integer id, Model model) {
-        Optional<Warticle> accessArticle = warticleRepository.findById(id);
-        Warticle articleFetch = accessArticle.orElse(null);
-        model.addAttribute("article", articleFetch);    
+    public String articleByID(@PathVariable Integer id, Model model) { //grab id from url
+        Optional<Warticle> accessArticle = warticleRepository.findById(id); //evoke query prepared in repository
+        Warticle articleFetch = accessArticle.orElse(null); //give me an article or give me null
+        model.addAttribute("article", articleFetch); //make articleFetch available to viewer
 
     return "wikicrud/viewarticle.html";
     }

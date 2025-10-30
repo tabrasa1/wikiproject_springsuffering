@@ -1,0 +1,59 @@
+/* Layout */
+body {
+  margin: 40px auto;
+  padding: 20px;
+  font-family: "Comic Sans MS", sans-serif;
+  background-color: #fdfdfd;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+/* Title */
+.articletitle {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: #000000;
+}
+
+/* Metadata */
+.articlemetadata {
+    display: inline-block;
+  background-color: #ffffff99;
+  font-size: 0.9rem;
+  color: #777;
+  padding: 4px 10px;
+  margin-bottom: 6px;
+  border-radius: 12px;
+}
+
+/* Content */
+.articlecontent {
+  display: inline-block;
+  background-color: #ffffff99;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #111133;
+  padding: 4px 10px;
+  margin-bottom: 30px;
+  border-radius: 12px;
+  white-space: pre-wrap;
+}
+
+/* Tags */
+.taglinks {
+  display: inline-block;
+  background-color: #ffffff99;
+  color: #0366d6;
+  padding: 4px 10px;
+  margin: 0 5px 5px 0;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: background-color 0.2s ease;
+}
+
+.tag-link:hover {
+  background-color: #cce4ff;
+}
