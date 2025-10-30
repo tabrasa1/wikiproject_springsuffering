@@ -17,7 +17,9 @@ public class Warticle {
     @Column(name = "date_update")
     private Timestamp dateEdit;
 
-
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private WikiCategory category;
     
 // Getters & setters
     public Integer getId() { return id; }
@@ -34,4 +36,8 @@ public class Warticle {
 
     public Timestamp getDateEdit() { return dateEdit; }
     public void setDateEdit(Timestamp dateEdit) { this.dateEdit = dateEdit; }
+
+    public WikiCategory getCategory() {return category;}
+    public void setCategory(WikiCategory category) {this.category = category; }
+
 }

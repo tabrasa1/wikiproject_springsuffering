@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Categories</title>
+</head>
+<body>
+    <div th:replace="fragments/navbar :: topnav"></div>
+    <h1>All Categories</h1>
+
+    <div th:if="${categories != null}">
+        <ul>
+            <li th:each="cat : ${categories}">
+                <a th:href="@{'categories/' + ${cat.id}}" th:text="${cat.name}">Category Name</a>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>

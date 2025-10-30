@@ -1,0 +1,10 @@
+<!-- templates/fragments/navbar.html -->
+<div th:fragment="topnav">
+    <nav style="background:#eee; padding:10px;">
+        <a th:href="@{/}" style="margin-right:15px;">Home</a>
+        <a th:href="@{articles}" style="margin-right:15px;">Articles</a>
+        <a th:href="@{categories}" style="margin-right:15px;">Categories</a>
+        <a th:href="@{articles/new}">New Article</a>
+    </nav>
+    <hr>
+</div>

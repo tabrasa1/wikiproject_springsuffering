@@ -6,6 +6,7 @@
     <meta charset="UTF-8">
 </head>
 <body>
+    <div th:replace="fragments/navbar :: topnav"></div>
     <h1>All Wiki Articles</h1>
 
     <div th:if="${articles != null}">
@@ -15,7 +16,8 @@
                 <p th:text="${article.contents}">Article Contents</p>
                 <p>
                     Created: <span th:text="${article.dateCreate}">dateCreate</span><br>
-                    Last Edited: <span th:text="${article.dateEdit}">dateEdit</span>
+                    Last Edited: <span th:text="${article.dateEdit}">dateEdit</span><br>    
+                    Category: <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span>
                 </p>
                 TODO: CUD functionality
                 <!-- <a th:href="@{'/wiki/edit/' + ${articlea> stupid llm -->

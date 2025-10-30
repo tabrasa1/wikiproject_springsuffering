@@ -1,12 +1,17 @@
 package com.wikiproject_springsuffering.control;
 
 import com.wikiproject_springsuffering.model.Warticle;
+import com.wikiproject_springsuffering.model.WikiCategory;
 import com.wikiproject_springsuffering.repository.WarticleRepository;
+import com.wikiproject_springsuffering.repository.CategoryRepository;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
+import java.util.List;
 
 @Controller
 @RequestMapping("/wiki")
@@ -14,12 +19,39 @@ public class WarticleCRUD {
 
     @Autowired
     private WarticleRepository warticleRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
+    @GetMapping("/")
+    public String showMainWikiPage() {
+        return "wikicrud/wikimain"; // it's just mainpage man
+    }
+
+
+    // READ: Display all categories
+    @GetMapping("/categories")
+    public String listCategories(Model model) {
+        model.addAttribute("categories", categoryRepository.findAll());
+        return "wikicrud/categories"; // .html template
+    }
+
+    @GetMapping("/categories/{id}")
+    public String articlesByCategory(@PathVariable Integer id, Model model) {
+        WikiCategory category = categoryRepository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("Invalid category ID: " + id));
+
+        List<Warticle> articles = warticleRepository.findByCategory(category);
+        model.addAttribute("articles", articles);
+        model.addAttribute("categoryName", category.getName());
+        return "wikicrud/articlesbycategory";
+    }    
 
     // READ: Display all articles
-    @GetMapping("/")
+    @GetMapping("/articles")
     public String listArticles(Model model) {
         model.addAttribute("articles", warticleRepository.findAll());
-        return "wikicrud/articles"; // Thymeleaf template
+        return "wikicrud/articles"; // .html template
     }
 
     // READ: Display one article
