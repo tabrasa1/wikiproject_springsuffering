@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.List;
+import java.util.Arrays;
+
 
 @Controller
 @RequestMapping("/wiki")
@@ -23,11 +27,11 @@ public class WarticleCRUD {
     private CategoryRepository categoryRepository;
 
 
+    //It's just the mainpage dawg
     @GetMapping("/")
     public String showMainWikiPage() {
         return "wikicrud/wikimain"; // it's just mainpage man
     }
-
 
     // READ: Display all categories
     @GetMapping("/categories")
@@ -36,6 +40,7 @@ public class WarticleCRUD {
         return "wikicrud/categories"; // .html template
     }
 
+    // READ: Display articles by category
     @GetMapping("/categories/{id}")
     public String articlesByCategory(@PathVariable Integer id, Model model) {
         WikiCategory category = categoryRepository.findById(id)
@@ -45,7 +50,21 @@ public class WarticleCRUD {
         model.addAttribute("articles", articles);
         model.addAttribute("categoryName", category.getName());
         return "wikicrud/articlesbycategory";
-    }    
+    }
+
+    // READ: Display articles by searched tags
+    @GetMapping("/articles/search")
+    public String searchByTags(@RequestParam("tags") String tagInput, Model model) {
+        String[] tagNames = tagInput.split(",");
+        List<Warticle> articles = warticleRepository.findByTags_Name(Arrays.stream(tagNames)
+            .map(String::trim)
+            .collect(Collectors.toList()));
+        model.addAttribute("articles", articles);
+        model.addAttribute("activeTags", tagInput);
+        return "wikicrud/articles";
+    }
+
+
 
     // READ: Display all articles
     @GetMapping("/articles")

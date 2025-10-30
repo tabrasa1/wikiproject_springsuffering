@@ -9,6 +9,13 @@
     <div th:replace="fragments/navbar :: topnav"></div>
     <h1>All Wiki Articles</h1>
 
+    <div th:if="${activeTags != null}">
+        <p>Showing articles tagged with: <strong th:text="${activeTags}">tags</strong></p>
+    </div>
+
+
+
+
     <div th:if="${articles != null}">
         <ul>
             <li th:each="article : ${articles}">
@@ -17,7 +24,8 @@
                 <p>
                     Created: <span th:text="${article.dateCreate}">dateCreate</span><br>
                     Last Edited: <span th:text="${article.dateEdit}">dateEdit</span><br>    
-                    Category: <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span>
+                    Category: <span th:text="${article.category != null ? article.category.name : 'Uncategorized'}">Category Name</span><br>
+                    Tags: <span th:each="tag : ${article.tags}" th:text="${tag?.name}" style="margin-right:8px;">Tag</span>
                 </p>
                 TODO: CUD functionality
                 <!-- <a th:href="@{'/wiki/edit/' + ${articlea> stupid llm -->

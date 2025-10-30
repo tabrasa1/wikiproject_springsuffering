@@ -1,6 +1,8 @@
 package com.wikiproject_springsuffering.model;
 import jakarta.persistence.*;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "wiki_article")
@@ -14,13 +16,24 @@ public class Warticle {
     @Column(name = "date_create", updatable = false)
     private Timestamp dateCreate;
 
-    @Column(name = "date_update")
+    @Column(name = "date_edit")
     private Timestamp dateEdit;
 
+    //Category
     @ManyToOne
     @JoinColumn(name = "category_id")
     private WikiCategory category;
     
+    //Tags list
+    @ManyToMany
+    @JoinTable(
+        name = "article_tag",
+        joinColumns = @JoinColumn(name = "article_id"),
+        inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private Set<Tag> tags = new HashSet<>();
+
+
 // Getters & setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -39,5 +52,8 @@ public class Warticle {
 
     public WikiCategory getCategory() {return category;}
     public void setCategory(WikiCategory category) {this.category = category; }
+
+    public Set<Tag> getTags() {return tags;}
+    public void setTags(Set<Tag> tags) {this.tags = tags;}
 
 }
