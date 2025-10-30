@@ -7,15 +7,19 @@
 </head>
 <body>
     <div th:replace="fragments/navbar :: topnav"></div>
-    <h1>All Wiki Articles</h1>
+    <h1>Wiki Articles Browser</h1>
 
+    <!--Display on tag-based search only-->
     <div th:if="${activeTags != null}">
         <p>Showing articles tagged with: <strong th:text="${activeTags}">tags</strong></p>
     </div>
 
+    <!--Display on category-based filter only-->
+    <div th:if="${categoryName != null}">
+        <p>Showing articles in category: <strong th:text="${categoryName}">categoryname</strong></p>
+    </div>
 
-
-
+    <!--Display existent articles-->
     <div th:if="${articles != null}">
         <ul>
             <li th:each="article : ${articles}">
@@ -31,10 +35,17 @@
                 <!-- <a th:href="@{'/wiki/edit/' + ${articlea> stupid llm -->
             </li>
         </ul>
+        
     </div>
 
+    <!--No articles existent-->
     <div th:if="${articles == null or #lists.isEmpty(articles)}">
         <p>No articles found.</p>
+    </div>
+
+    <!--Return if checking by category-->
+    <div th:if="${categoryName != null}">
+        <a th:href="@{/wiki/categories}">Back to Categories</a>
     </div>
 </body>
 </html>

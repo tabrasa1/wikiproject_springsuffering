@@ -49,7 +49,7 @@ public class WarticleCRUD {
         List<Warticle> articles = warticleRepository.findByCategory(category);
         model.addAttribute("articles", articles);
         model.addAttribute("categoryName", category.getName());
-        return "wikicrud/articlesbycategory";
+        return "wikicrud/articles";
     }
 
     // READ: Display articles by searched tags
@@ -63,8 +63,6 @@ public class WarticleCRUD {
         model.addAttribute("activeTags", tagInput);
         return "wikicrud/articles";
     }
-
-
 
     // READ: Display all articles
     @GetMapping("/articles")
