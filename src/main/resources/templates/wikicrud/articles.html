@@ -3,11 +3,15 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Wiki Articles</title>
+    <link rel="stylesheet" th:href="@{/css/wikinav.css}">
     <meta charset="UTF-8">
 </head>
-<body>
+<body th:style="'background-color:' + ${randomColor}">
     <div th:replace="fragments/navbar :: topnav"></div>
+
+    <div class="listcontainer">
     <h1>Wiki Articles Browser</h1>
+
 
     <!--Display on tag-based search only-->
     <div th:if="${activeTags != null}">
@@ -27,7 +31,6 @@
                 <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
             </li>
         </ul>
-        
     </div>
 
     <!--No articles existent-->
@@ -39,5 +42,6 @@
     <div th:if="${categoryName != null}">
         <a th:href="@{/wiki/categories}">Back to Categories</a>
     </div>
+    </div> <!--Closes:Listcontainer-->
 </body>
 </html>

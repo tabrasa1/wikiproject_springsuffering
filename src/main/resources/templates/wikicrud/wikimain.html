@@ -2,11 +2,13 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Wiki Main</title>
+    <link rel="stylesheet" th:href="@{/css/wikinav.css}">
 </head>
-<body>
+<body th:style="'background-color:' + ${randomColor}">
     <div th:replace="fragments/navbar :: topnav"></div>
     <h1>Welcome to ARMOK'S WORST WIKI</h1>
 
+    <div class="listcontainer">
     <h2>Recent Articles</h2>
     <ul>
         <li th:each="article : ${recentArticles}">
@@ -15,6 +17,6 @@
              + ' & Updated:' + ${#dates.format(article.dateEdit, 'yyyy/MM/dd hh:mm')}"></span>
         </li>
     </ul>
-
+    </div>
 </body>
 </html>

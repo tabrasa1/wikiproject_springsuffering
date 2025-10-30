@@ -2,17 +2,20 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Categories</title>
+    <link rel="stylesheet" th:href="@{/css/wikinav.css}">
 </head>
-<body>
+<body th:style="'background-color:' + ${randomColor}">
     <div th:replace="fragments/navbar :: topnav"></div>
-    <h1>All Categories</h1>
+    <div class="listcontainer">
+        <h1>All Categories</h1>
 
-    <div th:if="${categories != null}">
-        <ul>
-            <li th:each="cat : ${categories}">
-                <a th:href="@{'categories/' + ${cat.id}}" th:text="${cat.name}">Category Name</a>
-            </li>
-        </ul>
+        <div th:if="${categories != null}">
+            <ul>
+                <li th:each="cat : ${categories}">
+                    <a th:href="@{'categories/' + ${cat.id}}" th:text="${cat.name}">Category Name</a>
+                </li>
+            </ul>
+        </div>
     </div>
 </body>
 </html>

@@ -3,9 +3,9 @@
     <meta charset="UTF-8">
     <title>Register</title>
     <link rel="stylesheet" th:href="@{/css/userportal.css}">
-    <style>body{background-color: #ffaaff;}</style>
+
 </head>
-<body>
+<body th:style="'background-color:' + ${randomColor}">
     <h1>ARMOK'S WORST REGISTRATION PORTAL</h1>
     <div th:if="${resultMessage}" th:text="${resultMessage}" class="resultCSS"></div>
     
