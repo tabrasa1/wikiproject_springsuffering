@@ -9,11 +9,24 @@
     <h1>ARMOK'S WORST LOGIN PORTAL</h1>
     <div th:if="${resultMessage}" th:text="${resultMessage}" class="resultCSS"></div>
 
+    <div th:if="${session.loggedInAdmin}">
+        <div th:if="${session.loggedInAdmin}">
+            <p th:text="'Signed in currently as ' + ${session.loggedInAdmin}"></p>
+            <form th:action="@{/logout}" method="post">
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div th:unless="${session.loggedInAdmin}">
     <form th:action="@{/login}" th:object="${adminForm}" method="post">
         <p><label>Name:<input th:field="*{username}"required /></label></p>
         <p><label>Password:<input th:field="*{password}" type="password" required/></label></p>
         <button type="submit">Login</button>
     </form>
     <p><a href="register">Or did you want to register?</a></p>
+    </div>
+
+    <p><a href="/">Home</a></p><p><a href="/wiki/">Wiki</a></p>
 </body>
 </html>

@@ -5,7 +5,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.mindrot.jbcrypt.BCrypt;
+import jakarta.servlet.http.HttpSession; //User persistence
+
 
 
 @Controller
@@ -19,13 +22,22 @@ public class LoginController {
 
     //Establish a form with Admin model for data
     @GetMapping("/login")
-    public String showForm(Model model) {
+    public String showForm(@RequestParam(required = false) String logout, Model model) {
         model.addAttribute("adminForm", new Admin());
+        if (logout != null) {
+            model.addAttribute("resultMessage", "Successfully logged out.");
+        }
         return "login";
     }
     
+    @PostMapping("/logout")
+    public String Logmeout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login?logout=true";
+    }
+
     @PostMapping("/login")
-    public String submitForm(Admin adminForm, Model model) {
+    public String submitForm(Admin adminForm, Model model, HttpSession adminsess) {
         if (adminForm.getUsername() == null
                 || adminForm.getUsername().trim().isEmpty()
                 || adminForm.getPassword() == null
@@ -43,6 +55,7 @@ public class LoginController {
         }
         //Evaluate hashes
         if (adminRepoConn.findByUsername(adminForm.getUsername()).isPresent() && submitHash) {
+            adminsess.setAttribute("loggedInAdmin", adminForm.getUsername());
             model.addAttribute("resultMessage", "Login successful!");
         }
         else {
