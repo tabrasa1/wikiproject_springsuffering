@@ -20,7 +20,10 @@
                     <a th:href="@{'categories/' + ${cat.id}}" th:text="${cat.name}">Category Name</a>
                 </li>
             </ul>
-        <a href="categories/new">Create New Category</a>
+
+        <a th:if="${session.loggedInAdmin != null}"
+        href="categories/new">Create New Category</a>
+        
         </div>
     </div>
 </body>

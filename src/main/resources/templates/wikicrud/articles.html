@@ -55,7 +55,8 @@
     </div>
     <!--END ARTICLE CLAUSES-->
 
-    <a href="/wiki/articles/new">Create New Article</a>
+    <a th:if="${session.loggedInAdmin != null}" 
+    href="/wiki/articles/new">Create New Article</a>
 
     <!--Return if checking by category-->
     <div th:if="${categoryName != null}">

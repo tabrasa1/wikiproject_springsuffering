@@ -13,7 +13,12 @@
     <!--ifmaxxing: probably bad practice but TIME is of the ESSENCE-->
     <div th:if="${article != null and (!article.hiddenFlag or session.loggedInAdmin != null)}">
         <h1 class="articletitle" th:text="${article.title}">Article Title</h1>
-        <div><a></a><a></a></div>
+
+        <!--admin interface-->
+        <div th:if="${session.loggedInAdmin != null}">
+            <a th:href="@{'/wiki/articles/' + ${article.id} + '/update'}">Update</a>
+            <a th:href="@{'/wiki/articles/' + ${article.id}}">Delete</a>
+        </div>
 
         <hr>
 

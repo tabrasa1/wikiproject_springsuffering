@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Article</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/createform.css}">
+</head>
+
+<body th:style="'background-color:' + ${randomColor}">
+    <div th:replace="fragments/navbar :: topnav"></div>
+
+    <div class="listcontainer">
+    <h1>Update Article</h1>
+    <div th:if="${message}">
+        <ul>
+            <li th:each="err : ${message}" th:text="${err}"></li>
+        </ul>
+    </div>
+    <form th:action="@{'/wiki/articles/' + ${article.id} + '/update'}" th:object="${article}" method="post">
+        <label>Title:</label>
+        <input th:field="*{title}" type="text" placeholder="Enter title" /><br/>
+
+        <label>Contents:</label>
+        <textarea th:field="*{contents}" placeholder="Enter contents"></textarea><br/>
+        
+        <label>Category:</label>
+        <select name="category">
+            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}" th:selected="${article.category != null} ? ${cat.id} == ${article.category.id} : false"></option>
+        </select><br />
+
+        <label>Tags:</label><br />
+        <div th:each="tag : ${tags}">
+            <label>
+                <input type="checkbox" th:value="${tag.id}" th:field="*{tags}" />
+                <span th:text="${tag.name}"></span>
+            </label><br />
+        </div>
+
+        <label>
+            Hidden: <input type="checkbox" th:field="*{hiddenFlag}" />
+        </label><br/>
+
+        <button type="submit">Update</button>
+    </form>
+    </div><!--end of listcontainer-->
+</body>
+</html>
+

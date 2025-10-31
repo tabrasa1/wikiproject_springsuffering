@@ -18,7 +18,10 @@
             <span th:if="${article.hiddenFlag}" style="color: red;">(Hidden)</span>
         </li>
     </ul>
-    <a href="articles/new">Create New Article</a>
+
+    <a th:if="${session.loggedInAdmin != null}"
+    href="articles/new">Create New Article</a>
+
     </div>
 </body>
 </html>
