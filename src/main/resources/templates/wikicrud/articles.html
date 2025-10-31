@@ -46,7 +46,11 @@
     </div>
 
     <!--No articles existent-->
-    <div th:if="${articles == null or #lists.isEmpty(articles)}">
+    <div th:if="${session.loggedInAdmin == null and (articlesCensored == null or #lists.isEmpty(articlesCensored))}">
+        <p>No articles found.</p>
+    </div>
+
+    <div th:if="${session.loggedInAdmin != null and (articles == null or #lists.isEmpty(articles))}">
         <p>No articles found.</p>
     </div>
     <!--END ARTICLE CLAUSES-->
@@ -55,6 +59,8 @@
     <div th:if="${categoryName != null}">
         <a th:href="@{/wiki/categories}">Back to Categories</a>
     </div>
+
+    <a href="/wiki/articles/new">Create New Article</a>
     </div> <!--Closes:Listcontainer-->
 </body>
 </html>

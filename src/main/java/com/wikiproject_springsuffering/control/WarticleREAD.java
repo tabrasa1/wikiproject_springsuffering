@@ -54,7 +54,7 @@ public class WarticleREAD {
 
         List<Warticle> articles = warticleRepository.findByCategory(category);
         model.addAttribute("articles", articles);
-        model.addAttribute("articlesCensored", warticleRepository.findByHiddenFlagFalse());
+        model.addAttribute("articlesCensored", warticleRepository.findByCategoryAndHiddenFlagFalse(category));
         model.addAttribute("categoryName", category.getName());
         return "wikicrud/articles";
     }

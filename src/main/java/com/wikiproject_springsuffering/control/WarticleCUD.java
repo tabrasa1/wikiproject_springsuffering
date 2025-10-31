@@ -1,66 +1,81 @@
-// package com.wikiproject_springsuffering.control;
+package com.wikiproject_springsuffering.control;
 
-// import com.wikiproject_springsuffering.model.Warticle;
-// import com.wikiproject_springsuffering.model.WikiCategory;
-// import com.wikiproject_springsuffering.repository.WarticleRepository;
-// import com.wikiproject_springsuffering.repository.CategoryRepository;
+import com.wikiproject_springsuffering.model.Warticle;
+import com.wikiproject_springsuffering.model.WikiCategory;
+import com.wikiproject_springsuffering.repository.WarticleRepository;
+import com.wikiproject_springsuffering.repository.CategoryRepository;
+import com.wikiproject_springsuffering.repository.TagRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.sql.Timestamp;
+
+@Controller
+@RequestMapping("/wiki/articles")
+public class WarticleCUD {
+
+    @Autowired
+    private CategoryRepository categoryRepo;
+
+    @Autowired
+    private TagRepository tagRepo;
 
 
-// import org.springframework.beans.factory.annotation.Autowired;
-// import org.springframework.stereotype.Controller;
-// import org.springframework.ui.Model;
-// import org.springframework.web.bind.annotation.*;
+    @GetMapping("/new")
+    public String showCreateForm(Model model) {
+        model.addAttribute("article", new Warticle());
+        model.addAttribute("categories", categoryRepo.findAll());
+        model.addAttribute("tags", tagRepo.findAll());
+        return "wikicrud/createart";
+    }
 
-// import java.util.Optional;
-// import java.util.stream.Collectors;
-// import java.util.List;
-// import java.util.Arrays;
+    @Autowired
+    private WarticleRepository warticleRepo;
+
+    //Article creation
+    @PostMapping("/new")
+    public String createArticle(@ModelAttribute("article") Warticle article,
+            @RequestParam("category") Integer categoryId,
+            Model model) {
+        
+        // Store errors in a list
+        List<String> errors = new ArrayList<>();
+
+        // No null or empty titles. One tag minimum.
+        if (article.getTitle() == null || article.getTitle().trim().isEmpty()) {
+            errors.add("Title is required!");
+        }
+
+        if (article.getTags() == null || article.getTags().isEmpty()) {
+        errors.add("Minimum of 1 tag must be selected.");
+        }
+
+        //Return error upon presence of error messages
+        if (!errors.isEmpty()) {
+            model.addAttribute("message", errors);
+            model.addAttribute("categories", categoryRepo.findAll());
+            model.addAttribute("tags", tagRepo.findAll());
+            return "wikicrud/createart";
+        }
 
 
-// @Controller
-// @RequestMapping("/wiki")
-// public class WarticleCUD {
+        article.setDateCreate(new Timestamp(System.currentTimeMillis()));
+        article.setDateEdit(new Timestamp(System.currentTimeMillis()));
 
-//     @Autowired
-//     private WarticleRepository warticleRepository;
-//     @Autowired
-//     private CategoryRepository categoryRepository;
+        WikiCategory category = categoryRepo.findById(categoryId).orElse(null);
+        article.setCategory(category);
 
-//     // CREATE: Show form
-//     @GetMapping("/new")
-//     public String showCreateForm(Model model) {
-//         model.addAttribute("warticle", new Warticle());
-//         return "wikicrud/create"; // Thymeleaf template
-//     }
+        warticleRepo.save(article);
+        return "redirect:/wiki/articles";
+    }
 
-//     // CREATE: Handle form submission
-//     @PostMapping("/save")
-//     public String saveArticle(@ModelAttribute Warticle warticle) {
-//         warticleRepository.save(warticle);
-//         return "redirect:/wikicrud/articles";
-//     }
 
-//     // UPDATE: Show edit form
-//     @GetMapping("/edit/{id}")
-//     public String showEditForm(@PathVariable Integer id, Model model) {
-//         Warticle warticle = warticleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid article ID: " + id));
-//         model.addAttribute("warticle", warticle);
-//         return "wikicrud/update"; // Thymeleaf template
-//     }
-
-//     // UPDATE: Handle edit submission
-//     @PostMapping("/update/{id}")
-//     public String updateArticle(@PathVariable Integer id, @ModelAttribute Warticle warticle) {
-//         warticle.setId(id);
-//         warticleRepository.save(warticle);
-//         return "redirect:/wikicrud/articles";
-//     }
-
-//     // DELETE
-//     @GetMapping("/delete/")
-//     public String deleteArticle(@PathVariable Integer id) {
-//         warticleRepository.deleteById(id);
-//         return "redirect:/wikicrud/articles";
-//     }
-// }
-
+}

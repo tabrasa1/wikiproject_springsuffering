@@ -1,0 +1,52 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>New Article</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/createform.css}">
+</head>
+
+<body th:style="'background-color:' + ${randomColor}">
+    <div th:replace="fragments/navbar :: topnav"></div>
+
+    <div class="listcontainer">
+    <h1>Article Creation</h1>
+    <div th:if="${message}">
+        <ul>
+            <li th:each="err : ${message}" th:text="${err}"></li>
+        </ul>
+    </div>
+
+    <form th:action="@{/wiki/articles/new}" th:object="${article}" method="post">
+        <label>Title:</label>
+        <input type="text" name="title" placeholder="Enter title" /><br/>
+
+        <label>Contents:</label>
+        <textarea name="contents" placeholder="Enter contents"></textarea><br/>
+        
+        <label>Category:</label>    
+        <select name="category">
+            <option th:each="cat : ${categories}" th:value="${cat.id}" th:text="${cat.name}"></option>
+        </select><br />
+
+
+        <label>Tags:</label><br />
+        <div th:each="tag : ${tags}">
+            <label>
+                <input type="checkbox" th:value="${tag.id}" th:field="*{tags}" />
+                <span th:text="${tag.name}"></span>
+            </label><br />
+        </div>
+
+
+        <label>
+            Hidden: <input type="checkbox" name="hiddenFlag" />
+        </label><br/>
+
+        <button type="submit">Submit</button>
+    </form>
+    </div><!--end of listcontainer-->
+</body>
+</html>
+

@@ -18,6 +18,9 @@ public interface WarticleRepository extends JpaRepository<Warticle, Integer> {
     //Query to handle category filtering
     List<Warticle> findByCategory(WikiCategory category);
 
+    //False flagged category filtered
+    List<Warticle> findByCategoryAndHiddenFlagFalse(WikiCategory category);
+
     //Query to handle tag search
     @Query("SELECT DISTINCT a FROM Warticle a JOIN a.tags t WHERE t.name IN :names")
     List<Warticle> findByTags_Name(@Param("names") List<String> names);
