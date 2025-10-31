@@ -30,9 +30,13 @@ public class WarticleREAD {
 
     //It's just the mainpage dawg
     @GetMapping("/")
+    //get a load of this hot mess
     public String showMainWikiPage(Model model, HttpSession adminsess) {
+    //what a horrifying way to do a boolean: true only if session exists, and has a non-null login
     boolean isAdmin = adminsess != null && adminsess.getAttribute("loggedInAdmin") != null;
+    //no seriously these are wretched: true only if session exists, and showhidden is set to true
     boolean showHidden = adminsess != null && Boolean.TRUE.equals(adminsess.getAttribute("showHidden"));
+    //self-explanatory repository queries
     List<Warticle> recentArticles = (isAdmin && showHidden)
         ? warticleRepository.findTop3ByOrderByDateCreateDesc()
         : warticleRepository.findTop3ByHiddenFlagFalseOrderByDateCreateDesc();

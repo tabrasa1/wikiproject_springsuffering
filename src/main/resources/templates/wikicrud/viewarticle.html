@@ -47,8 +47,10 @@
         </div>
         <hr>
 
-        <div class="articlecontent" th:utext="${article.contents}">Contents</div>
-        </div>
+            <div class="articlecontent" th:if="${article.contents != null and !#strings.isEmpty(article.contents)}" th:utext="${article.contents}">Contents</div>
+            <div class="articlecontent" th:unless="${article.contents != null and !#strings.isEmpty(article.contents)}">Article Contents Blank!</div>
+
+        </div><!--Closes the visibility clause div-->
 
         <!--Hidden Article handling when user (or admin without toggle) cannot see it -->
         <div th:if="${article != null and article.hiddenFlag == true and !(session.loggedInAdmin != null and session.showHidden == true)}">
