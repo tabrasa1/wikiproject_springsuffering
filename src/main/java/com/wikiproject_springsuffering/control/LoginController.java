@@ -3,10 +3,10 @@ import com.wikiproject_springsuffering.model.Admin;
 import com.wikiproject_springsuffering.repository.AdminRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping; //Mapping urls to actions
+import org.springframework.web.bind.annotation.PostMapping; //Ditto above
 import org.springframework.web.bind.annotation.RequestParam;
-import org.mindrot.jbcrypt.BCrypt;
+import org.mindrot.jbcrypt.BCrypt; //Hashing
 import jakarta.servlet.http.HttpSession; //User persistence
 
 

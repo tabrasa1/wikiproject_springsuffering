@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.HttpSession; //User persistence
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,8 +30,11 @@ public class WarticleREAD {
 
     //It's just the mainpage dawg
     @GetMapping("/")
-    public String showMainWikiPage(Model model) {
-        List<Warticle> recentArticles = warticleRepository.findTop3ByOrderByDateCreateDesc();
+    public String showMainWikiPage(Model model, HttpSession adminsess) {
+        List<Warticle> recentArticles = (adminsess.getAttribute("loggedInAdmin") != null)
+        ? warticleRepository.findTop3ByOrderByDateCreateDesc()
+        : warticleRepository.findTop3ByHiddenFlagFalseOrderByDateCreateDesc();
+
         model.addAttribute("recentArticles", recentArticles);
         return "wikicrud/wikimain";
     }
@@ -50,6 +54,7 @@ public class WarticleREAD {
 
         List<Warticle> articles = warticleRepository.findByCategory(category);
         model.addAttribute("articles", articles);
+        model.addAttribute("articlesCensored", warticleRepository.findByHiddenFlagFalse());
         model.addAttribute("categoryName", category.getName());
         return "wikicrud/articles";
     }
@@ -62,7 +67,11 @@ public class WarticleREAD {
         (Arrays.stream(tagNames) //clean tags and stuff em in a list
             .map(String::trim)
             .collect(Collectors.toList()));
+        //it's a wee tad cursed to be plonking these
+        //values in EVERY mapping but time is of the essence
+        //and i'm short of it
         model.addAttribute("articles", articles); //values established for the viewer
+        model.addAttribute("articlesCensored", warticleRepository.findByHiddenFlagFalse());
         model.addAttribute("activeTags", tagInput);
         return "wikicrud/articles";
     }
@@ -80,57 +89,8 @@ public class WarticleREAD {
     @GetMapping("/articles")
     public String listArticles(Model model) {
         model.addAttribute("articles", warticleRepository.findAll());
+        model.addAttribute("articlesCensored", warticleRepository.findByHiddenFlagFalse());
         return "wikicrud/articles"; // .html template
-    }
-
-    // READ: Display one article
-    @GetMapping("/view/{id}")
-    public String viewArticle(@PathVariable int id, Model model) {
-    Optional<Warticle> article = warticleRepository.findById(id);
-    if (article.isPresent()) {
-        model.addAttribute("article", article.get());
-        return "wikicrud/viewarticle";
-    } else {
-        return "wikicrud/notfound"; // Optional: handle missing article
-    }
-}
-
-
-    // CREATE: Show form
-    @GetMapping("/new")
-    public String showCreateForm(Model model) {
-        model.addAttribute("warticle", new Warticle());
-        return "wikicrud/create"; // Thymeleaf template
-    }
-
-    // CREATE: Handle form submission
-    @PostMapping("/save")
-    public String saveArticle(@ModelAttribute Warticle warticle) {
-        warticleRepository.save(warticle);
-        return "redirect:/wikicrud/articles";
-    }
-
-    // UPDATE: Show edit form
-    @GetMapping("/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        Warticle warticle = warticleRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Invalid article ID: " + id));
-        model.addAttribute("warticle", warticle);
-        return "wikicrud/update"; // Thymeleaf template
-    }
-
-    // UPDATE: Handle edit submission
-    @PostMapping("/update/{id}")
-    public String updateArticle(@PathVariable Integer id, @ModelAttribute Warticle warticle) {
-        warticle.setId(id);
-        warticleRepository.save(warticle);
-        return "redirect:/wikicrud/articles";
-    }
-
-    // DELETE
-    @GetMapping("/delete/")
-    public String deleteArticle(@PathVariable Integer id) {
-        warticleRepository.deleteById(id);
-        return "redirect:/wikicrud/articles";
     }
 }
 

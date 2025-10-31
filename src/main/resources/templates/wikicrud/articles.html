@@ -23,10 +23,22 @@
         <p>Showing articles in category: <strong th:text="${categoryName}">categoryname</strong></p>
     </div>
 
-    <!--Display existent articles-->
-    <div th:if="${articles != null}">
+    <!--ARTICLE DISPLAY CLAUSES HERE-->
+    <!-- Show all articles if admin is logged in -->
+    <div th:if="${session.loggedInAdmin != null}">
         <ul>
             <li th:each="article : ${articles}">
+                <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
+                <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
+                <span th:if="${article.hiddenFlag}" style="color: red;">(Hidden)</span>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Show only visible articles to non-admins -->
+    <div th:unless="${session.loggedInAdmin != null}">
+        <ul>
+            <li th:each="article : ${articlesCensored}">
                 <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
                 <span th:text="${#dates.format(article.dateCreate, 'yyyy-MM-dd HH:mm')}"></span>
             </li>
@@ -37,7 +49,8 @@
     <div th:if="${articles == null or #lists.isEmpty(articles)}">
         <p>No articles found.</p>
     </div>
-
+    <!--END ARTICLE CLAUSES-->
+    
     <!--Return if checking by category-->
     <div th:if="${categoryName != null}">
         <a th:href="@{/wiki/categories}">Back to Categories</a>

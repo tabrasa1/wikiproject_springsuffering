@@ -10,7 +10,8 @@
 <body th:style="'background-color:' + ${randomColor}">
 
     <div th:replace="fragments/navbar :: topnav"></div>
-    <div th:if="${article != null}">
+    <!--ifmaxxing: probably bad practice but TIME is of the ESSENCE-->
+    <div th:if="${article != null and (!article.hiddenFlag or session.loggedInAdmin != null)}">
         <h1 class="articletitle" th:text="${article.title}">Article Title</h1>
 
         <hr>
@@ -33,6 +34,12 @@
         <hr>
 
         <div class="articlecontent" th:utext="${article.contents}">Contents</div>
+    </div>
+
+    <!--Hidden Article handling-->
+    <div th:unless="${article != null and (!article.hiddenFlag or session.loggedInAdmin != null)}">
+        <h1>403, man!</h1>
+        Sorry! Article is tucked away.
     </div>
 
     <!--Invalid ID handling-->

@@ -33,6 +33,10 @@ public class Warticle {
     )
     private Set<Tag> tags = new HashSet<>();
 
+    //Hidden flag
+    @Column(name = "hidden_flag")
+    private boolean hiddenFlag;
+
 
 // Getters & setters
     public Integer getId() { return id; }
@@ -55,5 +59,9 @@ public class Warticle {
 
     public Set<Tag> getTags() {return tags;}
     public void setTags(Set<Tag> tags) {this.tags = tags;}
+
+    public boolean isHiddenFlag() {return hiddenFlag;}
+    public void setHiddenFlag(boolean hiddenFlag) {this.hiddenFlag = hiddenFlag;
+}
 
 }

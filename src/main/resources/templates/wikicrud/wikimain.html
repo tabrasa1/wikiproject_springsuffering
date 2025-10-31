@@ -13,8 +13,9 @@
     <ul>
         <li th:each="article : ${recentArticles}">
             <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
-            <span th:text="'Created: ' + ${#dates.format(article.dateCreate, 'yyyy/MM/dd hh:mm')}
-             + ' & Updated:' + ${#dates.format(article.dateEdit, 'yyyy/MM/dd hh:mm')}"></span>
+            <span th:text="'Created: ' + ${#dates.format(article.dateCreate, 'yyyy/MM/dd hh:mm')} 
+                 + ' & Updated:' + ${#dates.format(article.dateEdit, 'yyyy/MM/dd hh:mm')}"></span>
+            <span th:if="${article.hiddenFlag}" style="color: red;">(Hidden)</span>
         </li>
     </ul>
     </div>

@@ -10,9 +10,10 @@ import com.wikiproject_springsuffering.model.Warticle;
 //WikiCategory model
 import com.wikiproject_springsuffering.model.WikiCategory;
 
-
-//No special operations needed, Thymeleaf will handle it
 public interface WarticleRepository extends JpaRepository<Warticle, Integer> {
+
+    //Seek false flags only
+    List<Warticle> findByHiddenFlagFalse();
 
     //Query to handle category filtering
     List<Warticle> findByCategory(WikiCategory category);
@@ -25,6 +26,9 @@ public interface WarticleRepository extends JpaRepository<Warticle, Integer> {
     //Seriously springboot syntax is cracked this looks like a method name and not like a bunch of chained query syntax
     //and i would have never figured this out through manually seeking documentation
     List<Warticle> findTop3ByOrderByDateCreateDesc();
+
+    //Seriously I think this is a bit silly
+    List<Warticle> findTop3ByHiddenFlagFalseOrderByDateCreateDesc();
 
 
 
