@@ -12,6 +12,7 @@
     <div class="listcontainer">
     <h1>Wiki Articles Browser</h1>
 
+    <div th:if="${resultMessage}" th:text="${resultMessage}"></div>
 
     <!--Display on tag-based search only-->
     <div th:if="${activeTags != null}">
@@ -67,7 +68,7 @@
         <input type="hidden" name="categoryId" th:value="${categoryId}" />
         <button type="submit"
                 onclick="return confirm('Are you sure you want to purge this category?')"
-                style="background:none;border:none;color:red;text-decoration:underline;cursor:pointer;">
+                style="font-size:16px;font-family:'Comic Sans MS';background:none;border:none;color:red;text-decoration:underline;cursor:pointer;">
             Purge category
         </button>
     </form>

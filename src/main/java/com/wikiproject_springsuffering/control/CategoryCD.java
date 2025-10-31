@@ -35,7 +35,7 @@ public class CategoryCD {
     // Category creation
     @PostMapping("/new")
     public String createCategory(@ModelAttribute("category") WikiCategory categoryAdd,
-            Model model) { //New category, therefore new instance
+            RedirectAttributes redirectAttrs, Model model) { //New category, therefore new instance
         
         // Store errors in a list
         List<String> errors = new ArrayList<>();
@@ -56,8 +56,9 @@ public class CategoryCD {
             return "wikicrud/createcat";
         }
 
-        categoryRepo.save(categoryAdd);
-        return "/wiki/categories";
+    categoryRepo.save(categoryAdd);
+    redirectAttrs.addFlashAttribute("resultMessage", "Category added successfully.");
+    return "redirect:/wiki/categories";
     }
 
     //Delete category: handled by a button that POSTs from articles.html
@@ -76,19 +77,23 @@ public class CategoryCD {
             return "redirect:/wiki/categories";
         }
 
-        if (categoryId != 1) {
+        if (categoryId != 1) { //oh my god nobody taught me lambda parameters for java yet
             categoryRepo.findById(categoryId).ifPresent(cat -> {
                     // Foreign key disassociation procedure
                     List<Warticle> articles = warticleRepo.findByCategory(cat);
-                        if (articles != null && !articles.isEmpty()) {
-                            // Find or create an "uncategorized" category
-                            WikiCategory fallback = categoryRepo.findByName("Uncategorized").orElseGet(() -> {
-                                WikiCategory fall = new WikiCategory();
-                                fall.setName("Uncategorized");
-                                return categoryRepo.save(fall);
-                            });
-                            for (Warticle a : articles) {
-                                a.setCategory(fallback);
+                        if (articles != null && !articles.isEmpty()) { //Null check
+                            // Find and apply ID associated with the "uncategorized" category
+                            WikiCategory purgeCat = categoryRepo.findByName("Uncategorized")
+                                //Fallback: create the category if it doesn't exist (it should already if you have my schema)
+                                .orElseGet(() -> {
+                                    WikiCategory fallback = new WikiCategory();
+                                    fallback.setName("Uncategorized");
+                                    return categoryRepo.save(fallback);
+                                });
+
+                            //Iterate through the article results and purge category association
+                            for (Warticle i : articles) {
+                                i.setCategory(purgeCat);
                             }
                             warticleRepo.saveAll(articles);
                         }
