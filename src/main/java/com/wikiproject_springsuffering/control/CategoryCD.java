@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +26,8 @@ public class CategoryCD {
 
     @Autowired
     private CategoryRepository categoryRepo;
+    @Autowired
+    private WarticleRepository warticleRepo;
 
     @GetMapping("/new")
     public String showCreateForm(Model model) {
@@ -57,8 +61,50 @@ public class CategoryCD {
         }
 
         categoryRepo.save(categoryAdd);
+        return "/wiki/categories";
+    }
+
+    //Delete category: handled by a button that POSTs from articles.html
+    @PostMapping("/purge")
+    @org.springframework.transaction.annotation.Transactional
+    public String purgeCategory(@RequestParam("categoryId") Integer categoryId, HttpSession session, Model model, RedirectAttributes redirectAttrs) {
+        // Admin session check
+        if (session == null || session.getAttribute("loggedInAdmin") == null) {
+            redirectAttrs.addFlashAttribute("resultMessage", "No permissions!");
+            return "redirect:/wiki/categories";
+        }
+
+        // Uncategorized category check
+        if (categoryId == 1) {
+            redirectAttrs.addFlashAttribute("resultMessage", "Cannot delete that category!");
+            return "redirect:/wiki/categories";
+        }
+
+        if (categoryId != 1) {
+            categoryRepo.findById(categoryId).ifPresent(cat -> {
+                    // Foreign key disassociation procedure
+                    List<Warticle> articles = warticleRepo.findByCategory(cat);
+                        if (articles != null && !articles.isEmpty()) {
+                            // Find or create an "uncategorized" category
+                            WikiCategory fallback = categoryRepo.findByName("Uncategorized").orElseGet(() -> {
+                                WikiCategory fall = new WikiCategory();
+                                fall.setName("Uncategorized");
+                                return categoryRepo.save(fall);
+                            });
+                            for (Warticle a : articles) {
+                                a.setCategory(fallback);
+                            }
+                            warticleRepo.saveAll(articles);
+                        }
+                        // Now safe to delete the category
+                        categoryRepo.delete(cat);
+                    } );
+        }
+
+        redirectAttrs.addFlashAttribute("resultMessage", "Category purged successfully.");
         return "redirect:/wiki/categories";
     }
 
+    
 
 }

@@ -13,6 +13,7 @@
     <!--ifmaxxing: probably bad practice but TIME is of the ESSENCE-->
     <div th:if="${article != null and (!article.hiddenFlag or session.loggedInAdmin != null)}">
         <h1 class="articletitle" th:text="${article.title}">Article Title</h1>
+        <div><a></a><a></a></div>
 
         <hr>
 
@@ -25,11 +26,11 @@
             th:text="${tag?.name}"
             class="taglinks">Tag</a>
         </div>
-        <div>
+        <div th:if="${article.category != null}">
             <strong>Category:</strong>
             <a th:href="@{'/wiki/categories/' + ${article.category.id}}"
-            th:text="${article.category.name}"
-            class="taglinks">Category</a>
+               th:text="${article.category.name}"
+               class="taglinks">Category</a>
         </div>
         <hr>
 

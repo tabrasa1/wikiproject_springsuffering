@@ -54,8 +54,12 @@ public class WarticleREAD {
 
         List<Warticle> articles = warticleRepository.findByCategory(category);
         model.addAttribute("articles", articles);
+        //man i have to make a totally unique query for this one, annoying
         model.addAttribute("articlesCensored", warticleRepository.findByCategoryAndHiddenFlagFalse(category));
         model.addAttribute("categoryName", category.getName());
+        //for the deletion logic
+        model.addAttribute("categoryId", id);
+        model.addAttribute("category", category);
         return "wikicrud/articles";
     }
 

@@ -9,6 +9,11 @@
     <div class="listcontainer">
         <h1>All Categories</h1>
 
+        <div th:if="${resultMessage}">
+            <p th:text="${resultMessage}"></p>
+        </div>
+
+
         <div th:if="${categories != null}">
             <ul>
                 <li th:each="cat : ${categories}">
