@@ -11,7 +11,8 @@
 
     <div th:replace="fragments/navbar :: topnav"></div>
     <!--ifmaxxing: probably bad practice but TIME is of the ESSENCE-->
-    <div th:if="${article != null and (!article.hiddenFlag or session.loggedInAdmin != null)}">
+    <div th:if="${article != null}">
+        <div th:if="${!article.hiddenFlag or (session.loggedInAdmin != null and session.showHidden == true)}">
         <h1 class="articletitle" th:text="${article.title}">Article Title</h1>
 
         <!--admin interface-->
@@ -47,10 +48,10 @@
         <hr>
 
         <div class="articlecontent" th:utext="${article.contents}">Contents</div>
-    </div>
+        </div>
 
-    <!--Hidden Article handling-->
-    <div th:if="${article != null and (article.hiddenFlag == true and session.loggedInAdmin == null)}">
+        <!--Hidden Article handling when user (or admin without toggle) cannot see it -->
+        <div th:if="${article != null and article.hiddenFlag == true and !(session.loggedInAdmin != null and session.showHidden == true)}">
         <h1>403, man!</h1>
         Sorry! Article is tucked away.
     </div>

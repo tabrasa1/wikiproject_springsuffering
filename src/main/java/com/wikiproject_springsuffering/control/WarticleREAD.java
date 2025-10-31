@@ -31,7 +31,9 @@ public class WarticleREAD {
     //It's just the mainpage dawg
     @GetMapping("/")
     public String showMainWikiPage(Model model, HttpSession adminsess) {
-        List<Warticle> recentArticles = (adminsess.getAttribute("loggedInAdmin") != null)
+    boolean isAdmin = adminsess != null && adminsess.getAttribute("loggedInAdmin") != null;
+    boolean showHidden = adminsess != null && Boolean.TRUE.equals(adminsess.getAttribute("showHidden"));
+    List<Warticle> recentArticles = (isAdmin && showHidden)
         ? warticleRepository.findTop3ByOrderByDateCreateDesc()
         : warticleRepository.findTop3ByHiddenFlagFalseOrderByDateCreateDesc();
 
@@ -95,6 +97,20 @@ public class WarticleREAD {
         model.addAttribute("articles", warticleRepository.findAll());
         model.addAttribute("articlesCensored", warticleRepository.findByHiddenFlagFalse());
         return "wikicrud/articles"; // .html template
+    }
+
+    // Admin toggle for showing hidden articles in the UI (does not alter DB flags)
+    @GetMapping("/admin/toggleHidden")
+    public String toggleShowHidden(@RequestParam(value = "state", required = false) Boolean state,
+                                   HttpSession session,
+                                   @RequestHeader(value = "Referer", required = false) String referer) {
+        if (session == null || session.getAttribute("loggedInAdmin") == null) {
+            return "redirect:/wiki/";
+        }
+        Boolean current = (Boolean) session.getAttribute("showHidden");
+        boolean next = (state != null) ? state : !(current != null && current);
+        session.setAttribute("showHidden", next);
+        return "redirect:" + (referer != null ? referer : "/wiki/articles");
     }
 }
 

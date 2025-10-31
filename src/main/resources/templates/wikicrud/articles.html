@@ -25,8 +25,13 @@
     </div>
 
     <!--ARTICLE DISPLAY CLAUSES HERE-->
-    <!-- Show all articles if admin is logged in -->
-    <div th:if="${session.loggedInAdmin != null}">
+    <!-- Admin toggle for hidden articles -->
+    <div th:if="${session.loggedInAdmin != null}" style="margin-bottom:8px;">
+        <a th:href="@{/wiki/admin/toggleHidden}" th:text="${session.showHidden} ? 'Hide hidden articles' : 'Show hidden articles'"></a>
+    </div>
+
+    <!-- Show all articles if admin enabled hidden view -->
+    <div th:if="${session.loggedInAdmin != null and session.showHidden == true}">
         <ul>
             <li th:each="article : ${articles}">
                 <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
@@ -35,9 +40,8 @@
             </li>
         </ul>
     </div>
-
-    <!-- Show only visible articles to non-admins -->
-    <div th:unless="${session.loggedInAdmin != null}">
+    <!-- Show only visible articles to non-admins and admins who haven't enabled hidden view -->
+    <div th:unless="${session.loggedInAdmin != null and session.showHidden == true}">
         <ul>
             <li th:each="article : ${articlesCensored}">
                 <a th:href="@{'/wiki/articles/' + ${article.id}}" th:text="${article.title}">Article Title</a>
