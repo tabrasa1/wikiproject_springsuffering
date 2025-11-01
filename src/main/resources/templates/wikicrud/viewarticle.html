@@ -53,9 +53,11 @@
         </div><!--Closes the visibility clause div-->
 
         <!--Hidden Article handling when user (or admin without toggle) cannot see it -->
-        <div th:if="${article != null and article.hiddenFlag == true and !(session.loggedInAdmin != null and session.showHidden == true)}">
+        <div th:if="${article.hiddenFlag == true and !(session.loggedInAdmin != null and session.showHidden == true)}">
         <h1>403, man!</h1>
         Sorry! Article is tucked away.
+        </div>
+        
     </div>
 
     <!--Invalid ID handling-->
@@ -64,11 +66,6 @@
         No article was found with that ID.
     </div>
     <br>
-
-            </li>
-        </ul>
-        
-    </div>
 </body>
 
 

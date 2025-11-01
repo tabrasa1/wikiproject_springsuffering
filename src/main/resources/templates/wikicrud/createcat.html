@@ -4,10 +4,12 @@
 <head>
     <title>Dummy Article Form</title>
     <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/createform.css}">
 </head>
-<body>
+<body th:style="'background-color:' + ${randomColor}">
     <div th:replace="fragments/navbar :: topnav"></div>
 
+    <div class="listcontainer">
     <h1>Article Creation</h1>
     <div th:if="${message}">
         <ul>
@@ -21,6 +23,7 @@
 
         <button type="submit">Submit</button>
     </form>
+    </div><!--end of listcontainer-->
 </body>
 </html>
 
