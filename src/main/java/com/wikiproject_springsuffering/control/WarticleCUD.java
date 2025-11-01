@@ -62,6 +62,60 @@ public class WarticleCUD {
         return "wikicrud/updateart";
     }
 
+    //Handle update POST
+    @PostMapping("/{id}/update")
+    public String updateArticle(@PathVariable Integer id,
+                                @ModelAttribute("article") Warticle formUpdate,
+                                @RequestParam(value = "category", required = false) Integer categoryId,
+                                Model model, HttpSession session) {
+        // Admin check
+        if (session == null || session.getAttribute("loggedInAdmin") == null) {
+            model.addAttribute("resultMessage", "No permission!");
+            return "redirect:/wiki/articles/" + id;
+        }
+
+        // Null article check
+        Warticle existing = warticleRepo.findById(id).orElse(null);
+        if (existing == null) {
+            model.addAttribute("resultMessage", "No article to edit!");
+            return "/wiki/articles";
+        }
+
+        // Title and tag validations as per creation rules
+        List<String> errors = new ArrayList<>();
+        if (formUpdate.getTitle() == null || formUpdate.getTitle().trim().isEmpty()) {
+            errors.add("Title is required!");
+        }
+        if (formUpdate.getTags() == null || formUpdate.getTags().isEmpty()) {
+            errors.add("Minimum of 1 tag must be selected.");
+        }
+        if (!errors.isEmpty()) {
+            model.addAttribute("message", errors);
+            model.addAttribute("article", existing);
+            model.addAttribute("categories", categoryRepo.findAll());
+            model.addAttribute("tags", tagRepo.findAll());
+            return "wikicrud/updateart";
+        }
+
+        // Apply updates
+        existing.setTitle(formUpdate.getTitle());
+        existing.setContents(formUpdate.getContents());
+        existing.setHiddenFlag(formUpdate.isHiddenFlag());
+        // Replace tags (binding should have populated Tag instances or proxies)
+        existing.setTags(formUpdate.getTags());
+
+        // Only update category if one was provided in the form/request.
+        if (categoryId != null) {
+            WikiCategory category = categoryRepo.findById(categoryId).orElse(null);
+            existing.setCategory(category);
+        }
+
+        existing.setDateEdit(new Timestamp(System.currentTimeMillis()));
+
+        warticleRepo.save(existing);
+        return "redirect:/wiki/articles/" + id;
+    }
+
     //Article creation
     @PostMapping("/new")
     public String createArticle(@ModelAttribute("article") Warticle article,
@@ -126,57 +180,5 @@ public class WarticleCUD {
         redirectAttrs.addFlashAttribute("resultMessage", "Article deleted.");
         return "redirect:/wiki/articles";
     }
-
-    //Handle update POST
-    @PostMapping("/{id}/update")
-    public String updateArticle(@PathVariable Integer id,
-                                @ModelAttribute("article") Warticle formUpdate,
-                                @RequestParam("category") Integer categoryId,
-                                Model model, HttpSession session) {
-        // Admin check
-        if (session == null || session.getAttribute("loggedInAdmin") == null) {
-            model.addAttribute("resultMessage", "No permission!");
-            return "redirect:/wiki/articles/" + id;
-        }
-
-        // Null article check
-        Warticle existing = warticleRepo.findById(id).orElse(null);
-        if (existing == null) {
-            model.addAttribute("resultMessage", "No article to edit!");
-            return "/wiki/articles";
-        }
-
-        // Title and tag validations as per creation rules
-        List<String> errors = new ArrayList<>();
-        if (formUpdate.getTitle() == null || formUpdate.getTitle().trim().isEmpty()) {
-            errors.add("Title is required!");
-        }
-        if (formUpdate.getTags() == null || formUpdate.getTags().isEmpty()) {
-            errors.add("Minimum of 1 tag must be selected.");
-        }
-        if (!errors.isEmpty()) {
-            model.addAttribute("message", errors);
-            model.addAttribute("article", existing);
-            model.addAttribute("categories", categoryRepo.findAll());
-            model.addAttribute("tags", tagRepo.findAll());
-            return "wikicrud/updateart";
-        }
-
-        // Apply updates
-        existing.setTitle(formUpdate.getTitle());
-        existing.setContents(formUpdate.getContents());
-        existing.setHiddenFlag(formUpdate.isHiddenFlag());
-        // Replace tags (binding should have populated Tag instances or proxies)
-        existing.setTags(formUpdate.getTags());
-
-        WikiCategory category = categoryRepo.findById(categoryId).orElse(null);
-        existing.setCategory(category);
-
-        existing.setDateEdit(new Timestamp(System.currentTimeMillis()));
-
-        warticleRepo.save(existing);
-        return "redirect:/wiki/articles/" + id;
-    }
-
 
 }
